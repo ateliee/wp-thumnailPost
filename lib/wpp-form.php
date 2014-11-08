@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class WPP_Form
+ */
 class WPP_Form{
 
     protected $namespace;
@@ -48,6 +51,20 @@ class WPP_Form{
     }
 
     /**
+     * @param $post
+     * @return array
+     */
+    public function getDBVar($post){
+        $values = array();
+        foreach($post as $key => $v){
+            if(isset($this->vars[$key])){
+                $values[$key] = $this->vars[$key];
+            }
+        }
+        return $values;
+    }
+
+    /**
      * @param $name
      * @param $type
      * @param array $options
@@ -71,6 +88,7 @@ class WPP_Form{
             $f[$k] = $this->getTag($data['name'],$data['type'],$data['options']);
         }
         $f['_errors'] = $this->errors;
+        $f['_id'] = $this->namespace;
         return $f;
     }
 
@@ -107,6 +125,10 @@ class WPP_Form{
             }
             if($form['type'] == 'number'){
                 $check[] = 'number';
+            }else if($form['type'] == 'url'){
+                $check[] = 'url';
+            }else if($form['type'] == 'email'){
+                $check[] = 'email';
             }
             foreach($check as $check_key){
                 $ck = false;
@@ -116,6 +138,12 @@ class WPP_Form{
                         break;
                     case 'number':
                         $ck = !(is_numeric($value));
+                        break;
+                    case 'url':
+                        $ck = !(preg_match('/^(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/', $value));
+                        break;
+                    case 'email':
+                        $ck = !(preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/", $value));
                         break;
                 }
                 if($ck){
@@ -142,6 +170,12 @@ class WPP_Form{
             case 'number':
                 return '数値ではありません';
                 break;
+            case 'url':
+                return 'URLが正しくありません';
+                break;
+            case 'email':
+                return 'メールアドレスが正しくありません';
+                break;
         }
         throw new Exception('UnSupport form error key ('.$key.')');
         return null;
@@ -159,11 +193,21 @@ class WPP_Form{
         $value = $this->getVar($name);
         switch(strtolower($type)){
             case 'text':
+            case 'number':
+            case 'url':
+            case 'email':
                 $s = array_merge($options,array('type'=>'text','name'=>$n,'value'=>$value));
                 return '<input '.$this->getAttrString($s).'>';
                 break;
-            case 'number':
-                $s = array_merge($options,array('type'=>'text','name'=>$n,'value'=>$value));
+            case 'hidden':
+                $s = array_merge($options,array('type'=>'hidden','name'=>$n,'value'=>$value));
+                return '<input '.$this->getAttrString($s).'>';
+                break;
+            case 'checkbox':
+                $s = array_merge($options,array('type'=>'checkbox','name'=>$n,'value'=>1));
+                if($value == 1){
+                    $s['checked'] = 'checked';
+                }
                 return '<input '.$this->getAttrString($s).'>';
                 break;
             case 'radio':

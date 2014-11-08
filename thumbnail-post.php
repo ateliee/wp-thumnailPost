@@ -80,7 +80,7 @@ class ThumbnailPost {
      *
      */
     public function add_pages() {
-        add_menu_page('サムネイル設定','サムネイル設定',  'level_8', __FILE__, array($this,'add_menu_page_action'), '', 26);
+        add_menu_page('サムネイル設定','サムネイル設定',  'level_8', __FILE__, array($this,'add_menu_page_action'), '', 1010);
     }
 
     /**
