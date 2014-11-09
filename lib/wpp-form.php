@@ -198,21 +198,22 @@ class WPP_Form{
      */
     public function getTag($name,$type,$options){
         $n = ($this->namespace ? $this->namespace.'['.$name.']' : $name);
+        $id = 'form-'.($this->namespace ? $this->namespace.'_'.$name : $name);
         $value = $this->getVar($name);
         switch(strtolower($type)){
             case 'text':
             case 'number':
             case 'url':
             case 'email':
-                $s = array_merge($options,array('type'=>'text','name'=>$n,'value'=>$value));
+                $s = array_merge($options,array('type'=>'text','name'=>$n,'value'=>$value,'id'=>$id));
                 return '<input '.$this->getAttrString($s).'>';
                 break;
             case 'hidden':
-                $s = array_merge($options,array('type'=>'hidden','name'=>$n,'value'=>$value));
+                $s = array_merge($options,array('type'=>'hidden','name'=>$n,'value'=>$value,'id'=>$id));
                 return '<input '.$this->getAttrString($s).'>';
                 break;
             case 'checkbox':
-                $s = array_merge($options,array('type'=>'checkbox','name'=>$n,'value'=>1));
+                $s = array_merge($options,array('type'=>'checkbox','name'=>$n,'value'=>1,'id'=>$id));
                 if($value == 1){
                     $s['checked'] = 'checked';
                 }
@@ -235,7 +236,7 @@ class WPP_Form{
                 break;
             case 'select':
                 $choices = $this->get_safe_array('choices',$options,null,true);
-                $s = array_merge($options,array('name'=>$n));
+                $s = array_merge($options,array('name'=>$n,'id'=>$id));
                 $tag = '<select '.$this->getAttrString($s).'>';
                 foreach($choices as $k => $v){
                     $s = array('value'=>$k);
