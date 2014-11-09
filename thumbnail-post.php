@@ -55,8 +55,23 @@ class ThumbnailPost {
     protected function createTemplate($filename){
         $template = new Template();
         $template->load(dirname(__FILE__).'/templates/'.$filename);
-        $template->assign('PLUGIN_URL',$this->PLUGIN_URL);
+        $template->assign_vars(array(
+            'PLUGIN_URL' => $this->PLUGIN_URL,
+            'PAGE_URL' => $this->get_plugin_url(),
+        ));
         return $template;
+    }
+
+    /**
+     * @param string $page
+     * @return string
+     */
+    protected function get_plugin_url($page=''){
+        $url = "admin.php?page=".plugin_basename(__FILE__);
+        if($page != ""){
+            $url .= '&'.$page;
+        }
+        return get_admin_url( null, $url );
     }
 
     /**

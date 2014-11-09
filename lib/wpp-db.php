@@ -24,7 +24,7 @@ class WPP_DB{
     /**
      *
      */
-    protected function updateVersion(){
+    public function updateVersion(){
         update_option($this->namespace, $this->version);
     }
 
@@ -72,11 +72,44 @@ class WPP_DB{
     }
 
     /**
+     * @param $table
+     * @param $where
+     * @return mixed
+     */
+    public function delete($table,$where){
+        $query = "DELETE FROM `".$table."` ";
+        if(is_array($where)){
+            $q = array();
+            foreach($where as $k => $v){
+                $q[] = $k.'='.$v;
+            }
+            $query .= "WHERE ".implode($q," AND ");
+        }else if($where != ""){
+            $query .= "WHERE ".$where;
+        }
+        return $this->query($query);
+    }
+
+    /**
+     * @param $sql
+     */
+    public function query($sql){
+        global $wpdb;
+        return $wpdb->query($sql);
+    }
+
+    /**
      * @param $sql
      * @return mixed
      */
     public function get_results($sql){
         global $wpdb;
-        return $wpdb->get_results($sql,ARRAY_A);
+        $args = func_get_args();
+        if(count($args) > 1){
+            $query = call_user_func_array(array($wpdb, "prepare"), $args);
+        }else{
+            $query = $sql;
+        }
+        return $wpdb->get_results($query,ARRAY_A);
     }
 }

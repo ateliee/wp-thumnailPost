@@ -51,6 +51,14 @@ class WPP_Form{
     }
 
     /**
+     * @return $this
+     */
+    public function resetVar(){
+        $this->vars = array();
+        return $this;
+    }
+
+    /**
      * @param $post
      * @return array
      */

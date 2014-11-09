@@ -9,6 +9,9 @@
     padding-right:30px;
     .box-sizing(border-box);
   }
+  .col-margin{
+    padding: 0 15px;
+  }
 
   .form-group{
     padding: 10px 0;
@@ -66,4 +69,34 @@
       margin-bottom: 15px;
     }
   }
+}
+.bd-box{
+  border: solid 1px #CCC;
+  .border-radiuses(0,10px,10px,0);
+  background: #FFF;
+  .bd-head{
+    padding: 12px 18px;
+    margin: 0;
+    border-bottom: solid 1px #CCC;
+    background: #f4f4f4;
+  }
+  .bd-inner{
+    padding: 12px 18px;
+  }
+}
+#listview{
+  tr{
+    td,th{
+      cursor: pointer;
+      border-bottom: solid 1px #EEE;
+    }
+  }
+  tr.active{
+    td,th{
+      background-color: #c2e2f2;
+    }
+  }
+}
+.m-bottom{
+  margin: 0 0 20px !important;
 }
